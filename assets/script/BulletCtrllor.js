@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-27 16:56:16
+ * @Last Modified time: 2018-10-27 18:26:20
  */
 const frontType = cc.Enum({
   portraitUp: 0,
@@ -56,9 +56,7 @@ cc.Class({
 
   start() {
     this.bulletPool = []
-    this.schedule(() => {
-      this.addBullet()
-    }, this.interval / 10)
+    this.schedule(this.addBullet, this.interval / 10)
   },
 
   addBullet() {
@@ -86,6 +84,9 @@ cc.Class({
     let fire = cc.moveTo(this.speed, pos)
     bullet.runAction(fire)
     this.bulletPool.push(bullet)
+  },
+  onDestroy() {
+    this.unschedule(this.addBullet)
+    this.unscheduleUpdate(this)
   }
-
 });

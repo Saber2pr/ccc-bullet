@@ -1,3 +1,9 @@
+/*
+ * @Author: AK-12 
+ * @Date: 2018-10-27 08:53:49 
+ * @Last Modified by:   AK-12 
+ * @Last Modified time: 2018-10-27 08:53:49 
+ */
 cc.Class({
   extends: cc.Component,
 
@@ -15,13 +21,22 @@ cc.Class({
     },
     speed: {
       type: cc.Integer,
-      default: 2,
+      default: 3,
       slide: true,
       min: 0,
-      max: 5,
+      max: 10,
       step: 1,
       displayName: '子弹迟缓度',
       tooltip: '值越大, 子弹速度越慢'
+    },
+    interval: {
+      type: cc.Integer,
+      default: 3,
+      slide: true,
+      min: 0,
+      max: 10,
+      step: 1,
+      displayName: '发射时间间隔'
     }
   },
 
@@ -31,10 +46,10 @@ cc.Class({
     this.bulletPool = []
     this.schedule(() => {
       this.addBullet()
-    }, this.speed / 10)
+    }, this.interval / 10)
     this.schedule(() => {
       this.removeBullet()
-    }, this.speed / 10, cc.macro.REPEAT_FOREVER, this.speed)
+    }, this.interval / 10, cc.macro.REPEAT_FOREVER, this.interval / 10 + this.speed)
   },
 
   addBullet() {

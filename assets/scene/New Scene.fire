@@ -587,6 +587,7 @@
     "bullet": {
       "__uuid__": "08589d4a-4f45-46ac-a0d8-0e5c2b7e240f"
     },
-    "speed": 2
+    "speed": 2,
+    "interval": 10
   }
 ]

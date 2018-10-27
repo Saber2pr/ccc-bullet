@@ -8,6 +8,6 @@
 * [碰撞插件](https://github.com/Saber2pr/ccc-bullet/blob/master/assets/script/PhysicsCollisionCtrllor.js)
 ![loading](https://github.com/Saber2pr/MyWeb/raw/master/resource/collision.jpg)
 * [自动追踪插件](https://github.com/Saber2pr/ccc-bullet/blob/master/assets/script/AutoFollower.js)
-![loading](https://github.com/Saber2pr/MyWeb/raw/master/resource/follow.jpg)
+![loading](https://github.com/Saber2pr/MyWeb/blob/master/resource/follow.jpg)
 * [场景切换插件](https://github.com/Saber2pr/ccc-bullet/blob/master/assets/script/SceneGo.js)
 ![loading](https://github.com/Saber2pr/MyWeb/raw/master/resource/scenego.jpg)

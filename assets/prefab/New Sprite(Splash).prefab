@@ -67,7 +67,7 @@
     "_localZOrder": 0,
     "_globalZOrder": 0,
     "_opacityModifyRGB": false,
-    "groupIndex": 0
+    "groupIndex": 2
   },
   {
     "__type__": "cc.Sprite",
@@ -151,7 +151,8 @@
       "__id__": 1
     },
     "_enabled": true,
-    "gravity": 0
+    "gravity": 0,
+    "lock": 1
   },
   {
     "__type__": "cc.PrefabInfo",

@@ -2,8 +2,12 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 17:00:17 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-27 17:22:11
+ * @Last Modified time: 2018-10-27 19:39:51
  */
+const collisionType = cc.Enum({
+  NO: 0,
+  YES: 1
+})
 cc.Class({
   extends: cc.Component,
 
@@ -13,6 +17,12 @@ cc.Class({
       type: cc.Integer,
       displayName: '重力值',
       tooltip: '注意：此项会影响全局,重力为0时,则物体不会自由落体'
+    },
+    lock: {
+      default: collisionType.YES,
+      type: cc.Enum(collisionType),
+      displayName: '是否销毁自身',
+      tooltip: 'YES: 碰撞销毁自身, NO: 碰撞不销毁自身'
     }
   },
 
@@ -22,7 +32,9 @@ cc.Class({
   },
 
   onBeginContact(contact, selfCollider, otherCollider) {
-    selfCollider.node.destroy()
+    if (this.lock === collisionType.YES) {
+      selfCollider.node.destroy()
+    }
     otherCollider.node.destroy()
   }
 

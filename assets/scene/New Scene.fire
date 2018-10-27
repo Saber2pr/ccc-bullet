@@ -682,7 +682,6 @@
     },
     "speed": 2,
     "interval": 10,
-    "strategy": 1,
-    "eventType": "destroy"
+    "front": 0
   }
 ]

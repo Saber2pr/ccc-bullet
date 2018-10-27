@@ -2,11 +2,13 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-27 10:26:45
+ * @Last Modified time: 2018-10-27 16:56:16
  */
-const strategyType = cc.Enum({
-  NO: 0,
-  YES: 1
+const frontType = cc.Enum({
+  portraitUp: 0,
+  portraitDown: 1,
+  landscapeRight: 2,
+  landscapeLeft: 3
 })
 cc.Class({
   extends: cc.Component,
@@ -42,37 +44,21 @@ cc.Class({
       step: 1,
       displayName: '发射时间间隔'
     },
-    strategy: {
-      type: cc.Enum(strategyType),
-      default: strategyType.NO,
-      displayName: '添加监听事件'
-    },
-    eventType: {
-      displayName: '销毁子弹事件名',
-      default: 'destroy',
-      visible() {
-        return (this.strategy == strategyType.YES)
-      }
+    front: {
+      type: cc.Enum(frontType),
+      default: frontType.vertical,
+      displayName: '子弹发射方向',
+      tooltip: 'portrait: 竖直, landscape: 水平'
     }
   },
 
   bulletPool: null,
-
-  onLoad() {
-    this.node.on(this.eventType, (event) => {
-      this.removeBullet()
-      event.stopPropagation()
-    })
-  },
 
   start() {
     this.bulletPool = []
     this.schedule(() => {
       this.addBullet()
     }, this.interval / 10)
-    this.schedule(() => {
-      this.removeBullet()
-    }, this.interval / 10, cc.macro.REPEAT_FOREVER, this.interval / 10 + this.speed)
   },
 
   addBullet() {
@@ -80,14 +66,26 @@ cc.Class({
     bullet.parent = this.hero.node.parent
     let worldPoint = this.hero.node.parent.convertToWorldSpace(this.hero.node)
     bullet.position = worldPoint
-    let fire = cc.moveTo(this.speed, cc.p(worldPoint.x, cc.winSize.height))
+    let pos
+    switch (this.front) {
+      case frontType.portraitUp:
+        pos = cc.p(worldPoint.x, cc.winSize.height)
+        break
+      case frontType.portraitDown:
+        pos = cc.p(worldPoint.x, -cc.winSize.height)
+        break
+      case frontType.landscapeRight:
+        pos = cc.p(cc.winSize.width, worldPoint.y)
+        break
+      case frontType.landscapeLeft:
+        pos = cc.p(-cc.winSize.width, worldPoint.y)
+        break
+      default:
+        throw (new Error('front error'))
+    }
+    let fire = cc.moveTo(this.speed, pos)
     bullet.runAction(fire)
     this.bulletPool.push(bullet)
-  },
-
-  removeBullet() {
-    this.bulletPool[0].destroy()
-    this.bulletPool.shift()
   }
 
 });

@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-27 19:00:55
+ * @Last Modified time: 2018-10-27 19:27:57
  */
 const frontType = cc.Enum({
   portraitUp: 0,
@@ -16,8 +16,8 @@ cc.Class({
   properties: {
     hero: {
       default: null,
-      type: cc.Sprite,
-      displayName: '角色',
+      type: cc.Node,
+      displayName: '发射器',
       tooltip: '要发射子弹的精灵'
     },
     bullet: {
@@ -40,13 +40,13 @@ cc.Class({
       default: 3,
       slide: true,
       min: 0,
-      max: 10,
+      max: 30,
       step: 1,
       displayName: '发射时间间隔'
     },
     front: {
       type: cc.Enum(frontType),
-      default: frontType.vertical,
+      default: frontType.portraitUp,
       displayName: '子弹发射方向',
       tooltip: 'portrait: 竖直, landscape: 水平'
     }
@@ -61,8 +61,8 @@ cc.Class({
 
   addBullet() {
     let bullet = cc.instantiate(this.bullet)
-    bullet.parent = this.hero.node.parent
-    let worldPoint = this.hero.node.parent.convertToWorldSpace(this.hero.node)
+    bullet.parent = this.hero.parent
+    let worldPoint = this.hero.parent.convertToWorldSpace(this.hero)
     bullet.position = worldPoint
     let pos
     switch (this.front) {

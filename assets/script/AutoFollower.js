@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 17:24:50 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-27 17:36:06
+ * @Last Modified time: 2018-10-27 19:02:42
  */
 let MathVec = {
   getFront(origin, target) {
@@ -31,7 +31,7 @@ cc.Class({
     },
     speed: {
       type: cc.Integer,
-      default: 1,
+      default: 2,
       displayName: '移动速度',
       slide: true,
       min: 0,

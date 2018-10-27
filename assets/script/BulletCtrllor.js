@@ -1,9 +1,13 @@
 /*
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
- * @Last Modified by:   AK-12 
- * @Last Modified time: 2018-10-27 08:53:49 
+ * @Last Modified by: AK-12
+ * @Last Modified time: 2018-10-27 10:26:45
  */
+const strategyType = cc.Enum({
+  NO: 0,
+  YES: 1
+})
 cc.Class({
   extends: cc.Component,
 
@@ -37,10 +41,29 @@ cc.Class({
       max: 10,
       step: 1,
       displayName: '发射时间间隔'
+    },
+    strategy: {
+      type: cc.Enum(strategyType),
+      default: strategyType.NO,
+      displayName: '添加监听事件'
+    },
+    eventType: {
+      displayName: '销毁子弹事件名',
+      default: 'destroy',
+      visible() {
+        return (this.strategy == strategyType.YES)
+      }
     }
   },
 
   bulletPool: null,
+
+  onLoad() {
+    this.node.on(this.eventType, (event) => {
+      this.removeBullet()
+      event.stopPropagation()
+    })
+  },
 
   start() {
     this.bulletPool = []

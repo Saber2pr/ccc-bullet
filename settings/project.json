@@ -9,16 +9,32 @@
   "collision-matrix": [
     [
       false,
+      false
+    ],
+    [
+      false,
+      false,
+      true,
+      null,
       true
     ],
     [
+      false,
       true,
       false,
       true
     ],
     [
       false,
+      false,
       true,
+      false
+    ],
+    [
+      false,
+      true,
+      false,
+      false,
       false
     ]
   ],
@@ -30,7 +46,9 @@
   "group-list": [
     "default",
     "bullet",
-    "enemy"
+    "enemy",
+    "denemy",
+    "dbullet"
   ],
   "simulator-orientation": false,
   "simulator-resolution": {

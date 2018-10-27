@@ -152,7 +152,8 @@
     },
     "_enabled": true,
     "gravity": 0,
-    "lock": 1
+    "lockA": 1,
+    "lockB": 0
   },
   {
     "__type__": "cc.PrefabInfo",

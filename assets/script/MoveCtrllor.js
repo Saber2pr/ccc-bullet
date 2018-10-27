@@ -79,9 +79,9 @@ let MoveCtrllor = {
     }, this)
     basicSpr.node.on("touchmove", function (touch) {
       //转换到局部坐标
-      var touchPosOnBasic = basicSpr.node.convertToNodeSpaceAR(touch.getLocation())
+      let touchPosOnBasic = basicSpr.node.convertToNodeSpaceAR(touch.getLocation())
       //限制拖动范围
-      var touchPosOnBasicLimited = MathVec.limitToCircle(touchPosOnBasic, this.radius)
+      let touchPosOnBasicLimited = MathVec.limitToCircle(touchPosOnBasic, this.radius)
       touchSpr.node.setPosition(touchPosOnBasicLimited)
       //保存角度
       this.angle = MathVec.getAngle(touchPosOnBasicLimited)
@@ -125,9 +125,9 @@ let MoveCtrllor = {
   },
   directToDes(node, method) {
     if (this.getStatus() === true) {
-      var angle = this.getMoveAngle()
-      var force = this.getForce()
-      var desPos =
+      let angle = this.getMoveAngle()
+      let force = this.getForce()
+      let desPos =
         method === 'character' ? cc.p(node.x + this.heroSpeed * Math.cos(angle) * force, node.y + this.heroSpeed * Math.sin(angle) * force) :
         method === 'camera' ? cc.p(node.x - this.heroSpeed * Math.cos(angle) * force, node.y - this.heroSpeed * Math.sin(angle) * force) :
         console.log("methodError")

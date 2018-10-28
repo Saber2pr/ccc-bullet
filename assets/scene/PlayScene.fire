@@ -1450,7 +1450,9 @@
     "hero": {
       "__id__": 13
     },
-    "camera": null,
+    "camera": {
+      "__id__": 11
+    },
     "radius": 25,
     "heroSpeed": 5,
     "stragey": 1001

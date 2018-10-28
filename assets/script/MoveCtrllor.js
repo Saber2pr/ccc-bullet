@@ -1,12 +1,9 @@
 /**
  * > 2018年9月1日15:26:22
  * 1. 给定点和最大极径，限制点的圆形活动范围
- * 2. 给定点和宽高，限制点的矩形活动范围
- * 3. 给定点获取其极角
- * 4. 给定极角，极径获取点
- * 5. 给定点，获取极径
- * 6. 给定点和条件， 获取随机数
- * 7. 返回origin指向靶目标的单位向量
+ * 2. 给定点获取其极角
+ * 3. 给定极角，极径获取点
+ * 4. 给定点，获取极径
  * #### By AK-12 @[qq:1029985799@qq.com, gmail:saber2pr@gmail.com]
  */
 let MathVec = {
@@ -57,11 +54,8 @@ let MoveCtrllor = {
   status: null,
   heroSpeed: null,
   radius: null,
-  lastAngle: null,
 
   onload(touchSpr) {
-    //保留角度
-    this.lastAngle = this.angle
     this.angle = 0
     this.force = 0
     this.status = false

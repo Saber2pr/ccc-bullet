@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-26 09:26:44 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-26 21:04:12
+ * @Last Modified time: 2018-10-28 10:28:46
  */
 cc.Class({
   extends: cc.Component,
@@ -23,6 +23,7 @@ cc.Class({
 
   onLoad() {
     this.button.node.on('click', () => {
+      // 压缩混淆是否影响_name的值?
       cc.director.loadScene(this.target._name)
     })
   }

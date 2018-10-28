@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-27 19:27:57
+ * @Last Modified time: 2018-10-28 10:27:02
  */
 const frontType = cc.Enum({
   portraitUp: 0,
@@ -52,10 +52,8 @@ cc.Class({
     }
   },
 
-  bulletPool: null,
 
   start() {
-    this.bulletPool = []
     this.schedule(this.addBullet, this.interval / 10)
   },
 
@@ -83,6 +81,5 @@ cc.Class({
     }
     let fire = cc.moveTo(this.speed, pos)
     bullet.runAction(fire)
-    this.bulletPool.push(bullet)
   }
 });

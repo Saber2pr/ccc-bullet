@@ -38,8 +38,8 @@
       false
     ]
   ],
-  "design-resolution-height": 640,
-  "design-resolution-width": 960,
+  "design-resolution-height": 800,
+  "design-resolution-width": 480,
   "excluded-modules": [],
   "fit-height": true,
   "fit-width": false,
@@ -55,6 +55,7 @@
     "height": 640,
     "width": 960
   },
+  "start-scene": "7956c33f-6a5c-4edb-83b9-d4ea6d5b5e9c",
   "use-customize-simulator": false,
   "use-project-simulator-setting": false
 }

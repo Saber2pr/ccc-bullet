@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-28 10:27:02
+ * @Last Modified time: 2018-10-28 21:50:45
  */
 const frontType = cc.Enum({
   portraitUp: 0,
@@ -61,7 +61,8 @@ cc.Class({
     let bullet = cc.instantiate(this.bullet)
     bullet.parent = this.hero.parent
     let worldPoint = this.hero.parent.convertToWorldSpace(this.hero)
-    bullet.position = worldPoint
+    let localPoint = this.hero.parent.convertToNodeSpace(worldPoint)
+    bullet.position = localPoint
     let pos
     switch (this.front) {
       case frontType.portraitUp:

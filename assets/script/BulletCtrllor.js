@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-28 21:50:45
+ * @Last Modified time: 2018-10-28 21:54:57
  */
 const frontType = cc.Enum({
   portraitUp: 0,
@@ -66,16 +66,16 @@ cc.Class({
     let pos
     switch (this.front) {
       case frontType.portraitUp:
-        pos = cc.p(worldPoint.x, cc.winSize.height)
+        pos = cc.p(localPoint.x, cc.winSize.height)
         break
       case frontType.portraitDown:
-        pos = cc.p(worldPoint.x, -cc.winSize.height)
+        pos = cc.p(localPoint.x, -cc.winSize.height)
         break
       case frontType.landscapeRight:
-        pos = cc.p(cc.winSize.width, worldPoint.y)
+        pos = cc.p(cc.winSize.width, localPoint.y)
         break
       case frontType.landscapeLeft:
-        pos = cc.p(-cc.winSize.width, worldPoint.y)
+        pos = cc.p(-cc.winSize.width, localPoint.y)
         break
       default:
         throw (new Error('front error'))

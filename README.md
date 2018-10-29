@@ -13,4 +13,4 @@
 - [场景切换插件](https://github.com/Saber2pr/ccc-bullet/blob/master/assets/script/SceneGo.js)
   ![loading](https://github.com/Saber2pr/MyWeb/raw/master/resource/scenego.jpg)
 - [弹窗插件](https://github.com/Saber2pr/ccc-bullet/blob/master/assets/script/LayoutCtrllor.js)
-  ！[loading](https://github.com/Saber2pr/MyWeb/raw/master/resource/LayoutCtrllor.jpg)
+  ![loading](https://github.com/Saber2pr/MyWeb/raw/master/resource/LayoutCtrllor.jpg)

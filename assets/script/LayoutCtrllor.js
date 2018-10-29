@@ -1,8 +1,8 @@
 /*
  * @Author: AK-12 
  * @Date: 2018-10-29 20:46:36 
- * @Last Modified by:   AK-12 
- * @Last Modified time: 2018-10-29 20:46:36 
+ * @Last Modified by: AK-12
+ * @Last Modified time: 2018-10-29 23:42:17
  */
 let onPlayType = cc.Enum({
   HIDDEN: 0,
@@ -17,30 +17,69 @@ let transformType = cc.Enum({
 })
 let AnimationMediator = {
   easeMoveBy: (duration, deltaPos) => cc.moveBy(duration, deltaPos).easing(cc.easeSineInOut(duration)),
+  easeMoveTo: (duration, Pos) => cc.moveTo(duration, Pos).easing(cc.easeSineInOut(duration)),
   enterFromTop: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(0, -length)),
   enterFromBottom: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(0, length)),
   enterFromLeft: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(length, 0)),
-  enterFromRight: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(-length, 0))
+  enterFromRight: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(-length, 0)),
 }
 let pauseLockType = cc.Enum({
   NO: 0,
   YES: 1
 })
+let measureType = cc.Enum({
+  NO: 0,
+  YES: 1
+})
+let TouchManager = {
+  touchTest(node, front, size, callback) {
+    node.on('touchstart', (touch) => {
+      let worldPoint = touch.getLocation()
+      switch (front) {
+        case 'LEFT':
+          Math.abs(worldPoint.x - 0) < size ? callback(worldPoint) : null
+          break
+        case 'RIGHT':
+          Math.abs(worldPoint.x - cc.winSize.width) < size ? callback(worldPoint) : null
+          break
+        case 'TOP':
+          Math.abs(worldPoint.y - cc.winSize.height) < size ? callback(worldPoint) : null
+          break
+        case 'BOTTOM':
+          Math.abs(worldPoint.y - 0) < size ? callback(worldPoint) : null
+          break
+        default:
+          throw (new Error('front error'))
+      }
+    })
+  }
+}
 cc.Class({
   extends: cc.Component,
 
   properties: {
+    measure: {
+      type: cc.Enum(measureType),
+      default: measureType.NO,
+      displayName: '是否启用触摸划出'
+    },
     button: {
       type: cc.Button,
       default: null,
       displayName: '触发按钮',
-      tooltip: '点击按钮触发弹框'
+      tooltip: '点击按钮触发弹框',
+      visible() {
+        return (this.measure === measureType.NO)
+      }
     },
     buttonOnLayout: {
       type: cc.Button,
       default: null,
       displayName: '恢复按钮',
-      tooltip: '点击按钮恢复弹框'
+      tooltip: '点击按钮恢复弹框',
+      visible() {
+        return (this.measure === measureType.NO)
+      }
     },
     pauseLock: {
       type: cc.Enum(pauseLockType),
@@ -98,10 +137,13 @@ cc.Class({
   },
 
   start() {
-    this.button.node.on('click', () => this.layoutAction(this.transformIn))
-    this.buttonOnLayout.node.on('click', () => this.layoutAction(this.transformOut))
+    if (this.measure === measureType.YES) {
+      this.touchEvent()
+    } else {
+      this.button.node.on('click', () => this.layoutAction(this.transformIn))
+      this.buttonOnLayout.node.on('click', () => this.layoutAction(this.transformOut))
+    }
   },
-
   layoutAction(type) {
     switch (type) {
       case transformType.NONE:
@@ -128,6 +170,38 @@ cc.Class({
       cc.director.resume() :
       this.scheduleOnce(() => cc.director.pause(), this.speed / 10) :
       null
+  },
+  touchEvent() {
+    let size = this.layout.node.getContentSize()
+    this.layout.node.on('touchmove', (touch) => {
+      let worldPoint = touch.getLocation()
+      let localPoint = this.layout.node.parent.convertToNodeSpace(worldPoint)
+      this.layout.node.position = cc.p(localPoint.x - size.width / 2, this.layout.node.y)
+    })
+    this.layout.node.on('touchend', () => {
+      this.bindToEdgeOut()
+      this.bindToEdgeIn()
+    })
+    this.layout.node.on('touchcancel', (touch) => {
+      this.bindToEdgeOut()
+      this.bindToEdgeIn()
+    })
+  },
+  bindToEdgeOut() {
+    let size = this.layout.node.getContentSize()
+    let localPoint = this.layout.node.getPosition()
+    let worldPoint = this.layout.node.parent.convertToWorldSpace(localPoint)
+    let desPos = cc.p(-cc.winSize.width / 2 + size.width / 2, this.layout.node.y)
+    worldPoint.x > size.width / 2 ?
+      this.layout.node.runAction(AnimationMediator.easeMoveTo(this.speed / 10, desPos)) : null
+  },
+  bindToEdgeIn() {
+    let size = this.layout.node.getContentSize()
+    let localPoint = this.layout.node.getPosition()
+    let worldPoint = this.layout.node.parent.convertToWorldSpace(localPoint)
+    let desPos = cc.p(-cc.winSize.width / 2 - size.width / 2 + 5, this.layout.node.y)
+    worldPoint.x < size.width / 2 ?
+      this.layout.node.runAction(AnimationMediator.easeMoveTo(this.speed / 10, desPos)) : null
   },
   onDestroy() {
     cc.director.resume()

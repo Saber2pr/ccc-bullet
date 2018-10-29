@@ -1,3 +1,9 @@
+/*
+ * @Author: AK-12 
+ * @Date: 2018-10-29 20:46:36 
+ * @Last Modified by:   AK-12 
+ * @Last Modified time: 2018-10-29 20:46:36 
+ */
 let onPlayType = cc.Enum({
   HIDDEN: 0,
   VISIBLE: 1

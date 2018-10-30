@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-29 20:46:36 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-30 17:13:30
+ * @Last Modified time: 2018-10-30 18:05:56
  */
 let onPlayType = cc.Enum({
   HIDDEN: 0,
@@ -18,47 +18,41 @@ let transformType = cc.Enum({
 let AnimationMediator = {
   easeMoveBy: (duration, deltaPos) => cc.moveBy(duration, deltaPos).easing(cc.easeSineInOut(duration)),
   easeMoveTo: (duration, Pos) => cc.moveTo(duration, Pos).easing(cc.easeSineInOut(duration)),
+
   enterFromTop: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(0, -length)),
   enterFromBottom: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(0, length)),
   enterFromLeft: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(length, 0)),
   enterFromRight: (duration, length) => AnimationMediator.easeMoveBy(duration, cc.p(-length, 0)),
+
   WorldPoint: (node) => node.parent.convertToWorldSpace(node.getPosition()),
-  bindToEdgeOut(node, speed, callback) {
+  desPosOut: (node) => cc.p(cc.winSize.width / 2 - node.getContentSize().width, node.y),
+  desPosIn: (node, vsize) => cc.p(cc.winSize.width / 2 - vsize, node.y),
+
+  bindToEdge(node, vsize, speed, callback) {
     let size = node.getContentSize()
-    let worldPoint = AnimationMediator.WorldPoint(node)
-    let desPos;
+    let worldPoint = AnimationMediator.WorldPoint(node);
     !!callback ? setTimeout(() => callback(worldPoint), speed * 1000 / 10) : null
     return {
       left() {
-        desPos = cc.p(-cc.winSize.width / 2 + size.width, node.y)
+        let desPosOut = AnimationMediator.desPosOut(node)
+        let desPosIn = AnimationMediator.desPosIn(node, vsize)
+        let desPosOutL = cc.p(-desPosOut.x, node.y)
+        let desPosInL = cc.p(-desPosIn.x, node.y)
         worldPoint.x > size.width / 2 ?
-          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null
+          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPosOutL)) :
+          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPosInL))
       },
       right() {
-        desPos = cc.p(cc.winSize.width / 2 - size.width, node.y)
+        let desPosOut = AnimationMediator.desPosOut(node)
+        let desPosIn = AnimationMediator.desPosIn(node, vsize)
+        let desPosOutR = desPosOut
+        let desPosInR = desPosIn
         worldPoint.x < cc.winSize.width - size.width / 2 ?
-          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null
+          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPosOutR)) :
+          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPosInR))
       }
     }
-  },
-  bindToEdgeIn(node, vsize, speed, callback) {
-    let size = node.getContentSize()
-    let worldPoint = AnimationMediator.WorldPoint(node)
-    let desPos;
-    !!callback ? setTimeout(() => callback(worldPoint), speed * 1000 / 10) : null
-    return {
-      left() {
-        desPos = cc.p(-cc.winSize.width / 2 + vsize, node.y)
-        worldPoint.x < size.width / 2 ?
-          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null
-      },
-      right() {
-        desPos = cc.p(cc.winSize.width / 2 - vsize, node.y)
-        worldPoint.x > cc.winSize.width - size.width / 2 ?
-          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null
-      }
-    }
-  },
+  }
 }
 let pauseLockType = cc.Enum({
   NO: 0,
@@ -129,7 +123,8 @@ cc.Class({
     transformIn: {
       type: cc.Enum(transformType),
       default: transformType.NONE,
-      displayName: '弹出动画'
+      displayName: '弹出动画',
+      tooltip: '触摸模式: TORIGHT表示从左侧划出'
     },
     transformOut: {
       type: cc.Enum(transformType),
@@ -164,20 +159,21 @@ cc.Class({
     }
   },
 
+  vsize: null,
+
   onLoad() {
     this.layout.node.active = Boolean(this.onPlay)
+    this.vsize = Number(cc.winSize.width / 2 - Math.abs(this.layout.node.x))
   },
 
   start() {
     if (this.measure === measureType.YES) {
       this.touchEvent()
     } else {
-      this.button.node.on('click', () => this.layoutAction(this.transformIn))
-      this.buttonOnLayout.node.on('click', () => this.layoutAction(this.transformOut))
+      this.clickEvent()
     }
   },
   layoutAction(select) {
-    let vsize = Number(10)
     let ClickType = {
       NONE: () => this.layout.node.active = !Boolean(this.layout.node.active),
       DROP: () => this.layout.node.runAction(AnimationMediator.enterFromTop(this.speed / 10, this.length)),
@@ -186,16 +182,14 @@ cc.Class({
       TORIGHT: () => this.layout.node.runAction(AnimationMediator.enterFromLeft(this.speed / 10, this.length))
     }
     let TouchType = {
-      NONE: () => this.layout.node.active = !Boolean(this.layout.node.active),
+      NONE: () => alert('NONE'),
       DROP: () => this.layout.node.runAction(AnimationMediator.enterFromTop(this.speed / 10, this.length)),
       UP: () => this.layout.node.runAction(AnimationMediator.enterFromBottom(this.speed / 10, this.length)),
       TOLEFT: () => {
-        AnimationMediator.bindToEdgeOut(this.layout.node, this.speed).right()
-        AnimationMediator.bindToEdgeIn(this.layout.node, vsize, this.speed).right()
+        AnimationMediator.bindToEdge(this.layout.node, this.vsize, this.speed).right()
       },
       TORIGHT: () => {
-        AnimationMediator.bindToEdgeOut(this.layout.node, this.speed).left()
-        AnimationMediator.bindToEdgeIn(this.layout.node, vsize, this.speed).left()
+        AnimationMediator.bindToEdge(this.layout.node, this.vsize, this.speed).left()
       }
     }
     if (this.measure === measureType.NO) {
@@ -227,8 +221,11 @@ cc.Class({
         throw (new Error('layout transform type error'))
     }
   },
+  clickEvent() {
+    this.button.node.on('click', () => this.layoutAction(this.transformIn))
+    this.buttonOnLayout.node.on('click', () => this.layoutAction(this.transformOut))
+  },
   touchEvent() {
-    // let size = this.layout.node.getContentSize()
     this.layout.node.on('touchmove', (touch) => {
       let worldPoint = touch.getLocation()
       let localPoint = this.layout.node.parent.convertToNodeSpace(worldPoint)

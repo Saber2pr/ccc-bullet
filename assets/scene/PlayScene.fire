@@ -1411,7 +1411,7 @@
     "_cascadeOpacityEnabled": true,
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 1,
+      "x": 0,
       "y": 0.5
     },
     "_contentSize": {
@@ -1425,7 +1425,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -212,
+      "x": 205,
       "y": 30
     },
     "_skewX": 0,
@@ -1484,7 +1484,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -85,
+      "x": 114,
       "y": 0
     },
     "_skewX": 0,
@@ -2134,7 +2134,7 @@
       "__id__": 39
     },
     "onPlay": 1,
-    "transformIn": 4,
+    "transformIn": 3,
     "transformOut": 4,
     "length": 200,
     "speed": 4

@@ -2,20 +2,37 @@
  * @Author: AK-12 
  * @Date: 2018-10-29 20:46:36 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-30 22:43:46
+ * @Last Modified time: 2018-10-30 23:11:27
  * @discription: cc原生实现动画.其实还是推荐使用Clip
  */
-let onPlayType = cc.Enum({
+const onPlayType = cc.Enum({
   HIDDEN: 0,
   VISIBLE: 1
 })
-let transformType = cc.Enum({
+const transformType = cc.Enum({
   NONE: 0,
   DROP: 1,
   UP: 2,
   TOLEFT: 3,
   TORIGHT: 4
 })
+const pauseLockType = cc.Enum({
+  NO: 0,
+  YES: 1
+})
+const measureType = cc.Enum({
+  NO: 0,
+  YES: 1
+})
+let StatusManager = {
+  use(bool) {
+    return (delayTime) => Boolean(bool) ?
+      cc.director.isPaused() ?
+      cc.director.resume() :
+      setTimeout(() => cc.director.pause(), delayTime * 1000) :
+      null
+  }
+}
 let AnimationMediator = {
   easeMoveBy: (duration, deltaPos) => cc.moveBy(duration, deltaPos).easing(cc.easeSineInOut(duration)),
   easeMoveTo: (duration, Pos) => cc.moveTo(duration, Pos).easing(cc.easeSineInOut(duration)),
@@ -53,23 +70,6 @@ let AnimationMediator = {
           node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPosInR))
       }
     }
-  }
-}
-let pauseLockType = cc.Enum({
-  NO: 0,
-  YES: 1
-})
-let measureType = cc.Enum({
-  NO: 0,
-  YES: 1
-})
-let StatusManager = {
-  use(bool) {
-    return (delayTime) => Boolean(bool) ?
-      cc.director.isPaused() ?
-      cc.director.resume() :
-      setTimeout(() => cc.director.pause(), delayTime * 1000) :
-      null
   }
 }
 cc.Class({

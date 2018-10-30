@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-29 20:46:36 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-30 22:38:19
+ * @Last Modified time: 2018-10-30 22:43:46
  * @discription: cc原生实现动画.其实还是推荐使用Clip
  */
 let onPlayType = cc.Enum({
@@ -78,7 +78,7 @@ cc.Class({
   properties: {
     measure: {
       type: cc.Enum(measureType),
-      default: measureType.NO,
+      default: measureType.YES,
       displayName: '是否启用触摸划出',
       tooltip: '仅限屏幕左右两侧'
     },

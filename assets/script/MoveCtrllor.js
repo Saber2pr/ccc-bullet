@@ -1,16 +1,8 @@
 /*
  * @Author: AK-12 
- * @Date: 2018-10-29 20:55:40 
+ * @Date: 2018-10-30 22:46:42 
  * @Last Modified by:   AK-12 
- * @Last Modified time: 2018-10-29 20:55:40 
- */
-/**
- * > 2018年9月1日15:26:22
- * 1. 给定点和最大极径，限制点的圆形活动范围
- * 2. 给定点获取其极角
- * 3. 给定极角，极径获取点
- * 4. 给定点，获取极径
- * #### By AK-12 @[qq:1029985799@qq.com, gmail:saber2pr@gmail.com]
+ * @Last Modified time: 2018-10-30 22:46:42 
  */
 let MathVec = {
   /**
@@ -43,16 +35,8 @@ let MathVec = {
   }
 }
 /**
- * #### 2018年9月1日15:26:16
- * * 使用它创建轮盘很简单
- * 1. 先在场景onload中初始化
  * > MoveCtrllor.init(basicSpr, touchSpr, radius, heroSpeed)
- * 2. 然后在update里绑定角色节点
  * > MoveCtrllor.updateCharacter(this.hero)  
- * 3. 传入拖动盘和拖动点，实现拖动手柄
- * 4. 提供返回拖动角度和拖动力度的接口
- * 5. 控制节点运动接口
- * #### By AK-12 @[qq:1029985799@qq.com, gmail:saber2pr@gmail.com]
  */
 let MoveCtrllor = {
   angle: null,

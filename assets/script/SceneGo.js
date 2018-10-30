@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-26 09:26:44 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-28 21:52:46
+ * @Last Modified time: 2018-10-30 22:45:53
  */
 let AnimationMediator = {
   TransitionMoveInL(duration, scene1, scene2) {
@@ -14,7 +14,7 @@ let AnimationMediator = {
   }
 }
 const transformType = cc.Enum({
-  common: 0,
+  NONE: 0,
   TransitionMoveInL: 1
 })
 cc.Class({
@@ -34,7 +34,7 @@ cc.Class({
     },
     transform: {
       type: cc.Enum(transformType),
-      default: transformType.common,
+      default: transformType.NONE,
       displayName: "场景切换效果"
     }
   },
@@ -44,7 +44,7 @@ cc.Class({
       // 压缩混淆是否影响_name的值?
       // cc.director.loadScene(this.target._name)
       switch (this.transform) {
-        case transformType.common:
+        case transformType.NONE:
           cc.director.loadScene(this.target._name)
           break
         case transformType.TransitionMoveInL:

@@ -2,7 +2,8 @@
  * @Author: AK-12 
  * @Date: 2018-10-29 20:46:36 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-30 18:05:56
+ * @Last Modified time: 2018-10-30 22:38:19
+ * @discription: cc原生实现动画.其实还是推荐使用Clip
  */
 let onPlayType = cc.Enum({
   HIDDEN: 0,
@@ -78,7 +79,8 @@ cc.Class({
     measure: {
       type: cc.Enum(measureType),
       default: measureType.NO,
-      displayName: '是否启用触摸划出'
+      displayName: '是否启用触摸划出',
+      tooltip: '仅限屏幕左右两侧'
     },
     button: {
       type: cc.Button,
@@ -124,7 +126,9 @@ cc.Class({
       type: cc.Enum(transformType),
       default: transformType.NONE,
       displayName: '弹出动画',
-      tooltip: '触摸模式: TORIGHT表示从左侧划出'
+      visible() {
+        return (this.measure === measureType.NO)
+      }
     },
     transformOut: {
       type: cc.Enum(transformType),
@@ -168,7 +172,7 @@ cc.Class({
 
   start() {
     if (this.measure === measureType.YES) {
-      this.touchEvent()
+      this.touchEvent(this.layout.node.position.x < 0 ? transformType.TORIGHT : transformType.TOLEFT)
     } else {
       this.clickEvent()
     }
@@ -182,15 +186,11 @@ cc.Class({
       TORIGHT: () => this.layout.node.runAction(AnimationMediator.enterFromLeft(this.speed / 10, this.length))
     }
     let TouchType = {
-      NONE: () => alert('NONE'),
+      NONE: () => alert('触摸弹框动画类型不能为NONE'),
       DROP: () => this.layout.node.runAction(AnimationMediator.enterFromTop(this.speed / 10, this.length)),
       UP: () => this.layout.node.runAction(AnimationMediator.enterFromBottom(this.speed / 10, this.length)),
-      TOLEFT: () => {
-        AnimationMediator.bindToEdge(this.layout.node, this.vsize, this.speed).right()
-      },
-      TORIGHT: () => {
-        AnimationMediator.bindToEdge(this.layout.node, this.vsize, this.speed).left()
-      }
+      TOLEFT: () => AnimationMediator.bindToEdge(this.layout.node, this.vsize, this.speed).right(),
+      TORIGHT: () => AnimationMediator.bindToEdge(this.layout.node, this.vsize, this.speed).left()
     }
     if (this.measure === measureType.NO) {
       this.switchFunc(select, ClickType.NONE, ClickType.DROP, ClickType.UP, ClickType.TOLEFT, ClickType.TORIGHT)
@@ -225,18 +225,23 @@ cc.Class({
     this.button.node.on('click', () => this.layoutAction(this.transformIn))
     this.buttonOnLayout.node.on('click', () => this.layoutAction(this.transformOut))
   },
-  touchEvent() {
+  touchEvent(select) {
+    let size = this.layout.node.getContentSize()
     this.layout.node.on('touchmove', (touch) => {
       let worldPoint = touch.getLocation()
       let localPoint = this.layout.node.parent.convertToNodeSpace(worldPoint)
-      // worldPoint.x < size.width ? this.layout.node.position = cc.p(localPoint.x, this.layout.node.y) : null
-      this.layout.node.position = cc.p(localPoint.x, this.layout.node.y)
+      let currentPos = cc.p(localPoint.x, this.layout.node.y)
+      if (select === transformType.TORIGHT) {
+        worldPoint.x < size.width ? this.layout.node.position = currentPos : null
+      } else if (select === transformType.TOLEFT) {
+        worldPoint.x > cc.winSize.width - size.width ? this.layout.node.position = currentPos : null
+      }
     })
     this.layout.node.on('touchend', () => {
-      this.layoutAction(this.transformIn)
+      this.layoutAction(select)
     })
     this.layout.node.on('touchcancel', () => {
-      this.layoutAction(this.transformIn)
+      this.layoutAction(select)
     })
   },
   onDestroy() {

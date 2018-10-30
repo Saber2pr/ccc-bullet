@@ -1425,7 +1425,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 119,
+      "x": -212,
       "y": 30
     },
     "_skewX": 0,
@@ -1484,7 +1484,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -93,
+      "x": -85,
       "y": 0
     },
     "_skewX": 0,
@@ -2122,7 +2122,7 @@
       "__id__": 3
     },
     "_enabled": true,
-    "measure": 0,
+    "measure": 1,
     "button": {
       "__id__": 30
     },
@@ -2135,7 +2135,7 @@
     },
     "onPlay": 1,
     "transformIn": 4,
-    "transformOut": 3,
+    "transformOut": 4,
     "length": 200,
     "speed": 4
   },

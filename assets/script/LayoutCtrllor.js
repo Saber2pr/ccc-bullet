@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-29 20:46:36 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-30 13:39:45
+ * @Last Modified time: 2018-10-30 17:13:30
  */
 let onPlayType = cc.Enum({
   HIDDEN: 0,
@@ -26,18 +26,38 @@ let AnimationMediator = {
   bindToEdgeOut(node, speed, callback) {
     let size = node.getContentSize()
     let worldPoint = AnimationMediator.WorldPoint(node)
-    let desPos = cc.p(-cc.winSize.width / 2 + size.width, node.y)
-    worldPoint.x > size.width / 2 ?
-      node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null;
+    let desPos;
     !!callback ? setTimeout(() => callback(worldPoint), speed * 1000 / 10) : null
+    return {
+      left() {
+        desPos = cc.p(-cc.winSize.width / 2 + size.width, node.y)
+        worldPoint.x > size.width / 2 ?
+          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null
+      },
+      right() {
+        desPos = cc.p(cc.winSize.width / 2 - size.width, node.y)
+        worldPoint.x < cc.winSize.width - size.width / 2 ?
+          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null
+      }
+    }
   },
   bindToEdgeIn(node, vsize, speed, callback) {
     let size = node.getContentSize()
     let worldPoint = AnimationMediator.WorldPoint(node)
-    let desPos = cc.p(-cc.winSize.width / 2 + vsize, node.y)
-    worldPoint.x < size.width / 2 ?
-      node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null;
+    let desPos;
     !!callback ? setTimeout(() => callback(worldPoint), speed * 1000 / 10) : null
+    return {
+      left() {
+        desPos = cc.p(-cc.winSize.width / 2 + vsize, node.y)
+        worldPoint.x < size.width / 2 ?
+          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null
+      },
+      right() {
+        desPos = cc.p(cc.winSize.width / 2 - vsize, node.y)
+        worldPoint.x > cc.winSize.width - size.width / 2 ?
+          node.runAction(AnimationMediator.easeMoveTo(speed / 10, desPos)) : null
+      }
+    }
   },
 }
 let pauseLockType = cc.Enum({
@@ -53,7 +73,7 @@ let StatusManager = {
     return (delayTime) => Boolean(bool) ?
       cc.director.isPaused() ?
       cc.director.resume() :
-      setTimeout(() => cc.director.pause(), delayTime * 1000 / 10) :
+      setTimeout(() => cc.director.pause(), delayTime * 1000) :
       null
   }
 }
@@ -114,7 +134,10 @@ cc.Class({
     transformOut: {
       type: cc.Enum(transformType),
       default: transformType.NONE,
-      displayName: '恢复动画'
+      displayName: '恢复动画',
+      visible() {
+        return (this.measure === measureType.NO)
+      }
     },
     length: {
       type: cc.Integer,
@@ -153,50 +176,70 @@ cc.Class({
       this.buttonOnLayout.node.on('click', () => this.layoutAction(this.transformOut))
     }
   },
-  layoutAction(type) {
-    switch (type) {
+  layoutAction(select) {
+    let vsize = Number(10)
+    let ClickType = {
+      NONE: () => this.layout.node.active = !Boolean(this.layout.node.active),
+      DROP: () => this.layout.node.runAction(AnimationMediator.enterFromTop(this.speed / 10, this.length)),
+      UP: () => this.layout.node.runAction(AnimationMediator.enterFromBottom(this.speed / 10, this.length)),
+      TOLEFT: () => this.layout.node.runAction(AnimationMediator.enterFromRight(this.speed / 10, this.length)),
+      TORIGHT: () => this.layout.node.runAction(AnimationMediator.enterFromLeft(this.speed / 10, this.length))
+    }
+    let TouchType = {
+      NONE: () => this.layout.node.active = !Boolean(this.layout.node.active),
+      DROP: () => this.layout.node.runAction(AnimationMediator.enterFromTop(this.speed / 10, this.length)),
+      UP: () => this.layout.node.runAction(AnimationMediator.enterFromBottom(this.speed / 10, this.length)),
+      TOLEFT: () => {
+        AnimationMediator.bindToEdgeOut(this.layout.node, this.speed).right()
+        AnimationMediator.bindToEdgeIn(this.layout.node, vsize, this.speed).right()
+      },
+      TORIGHT: () => {
+        AnimationMediator.bindToEdgeOut(this.layout.node, this.speed).left()
+        AnimationMediator.bindToEdgeIn(this.layout.node, vsize, this.speed).left()
+      }
+    }
+    if (this.measure === measureType.NO) {
+      this.switchFunc(select, ClickType.NONE, ClickType.DROP, ClickType.UP, ClickType.TOLEFT, ClickType.TORIGHT)
+      this.button.node.active = !this.button.node.active
+      StatusManager.use(this.pauseLock)(this.speed / 10)
+    } else {
+      this.switchFunc(select, TouchType.NONE, TouchType.DROP, TouchType.UP, TouchType.TOLEFT, TouchType.TORIGHT)
+    }
+  },
+  switchFunc(select, NONE, DROP, UP, TOLEFT, TORIGHT) {
+    switch (select) {
       case transformType.NONE:
-        this.layout.node.active = !Boolean(this.layout.node.active)
+        NONE()
         break
       case transformType.DROP:
-        this.layout.node.runAction(AnimationMediator.enterFromTop(this.speed / 10, this.length))
+        DROP()
         break
       case transformType.UP:
-        this.layout.node.runAction(AnimationMediator.enterFromBottom(this.speed / 10, this.length))
+        UP()
         break
       case transformType.TOLEFT:
-        this.layout.node.runAction(AnimationMediator.enterFromRight(this.speed / 10, this.length))
+        TOLEFT()
         break
       case transformType.TORIGHT:
-        this.layout.node.runAction(AnimationMediator.enterFromLeft(this.speed / 10, this.length))
+        TORIGHT()
         break
       default:
         throw (new Error('layout transform type error'))
     }
-    this.button.node.active = !this.button.node.active
-    this.pause()
-  },
-  pause() {
-    Boolean(this.pauseLock) ?
-      cc.director.isPaused() ?
-      cc.director.resume() :
-      this.scheduleOnce(() => cc.director.pause(), this.speed / 10) :
-      null
   },
   touchEvent() {
-    let vsize = Number(this.layout.node.x + cc.winSize.width / 2)
+    // let size = this.layout.node.getContentSize()
     this.layout.node.on('touchmove', (touch) => {
       let worldPoint = touch.getLocation()
       let localPoint = this.layout.node.parent.convertToNodeSpace(worldPoint)
+      // worldPoint.x < size.width ? this.layout.node.position = cc.p(localPoint.x, this.layout.node.y) : null
       this.layout.node.position = cc.p(localPoint.x, this.layout.node.y)
     })
     this.layout.node.on('touchend', () => {
-      AnimationMediator.bindToEdgeOut(this.layout.node, this.speed)
-      AnimationMediator.bindToEdgeIn(this.layout.node, vsize, this.speed)
+      this.layoutAction(this.transformIn)
     })
     this.layout.node.on('touchcancel', () => {
-      AnimationMediator.bindToEdgeOut(this.layout.node, this.speed)
-      AnimationMediator.bindToEdgeIn(this.layout.node, vsize, this.speed)
+      this.layoutAction(this.transformIn)
     })
   },
   onDestroy() {

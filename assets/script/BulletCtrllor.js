@@ -2,13 +2,17 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-28 21:54:57
+ * @Last Modified time: 2018-10-31 22:10:35
  */
 const frontType = cc.Enum({
   portraitUp: 0,
   portraitDown: 1,
   landscapeRight: 2,
   landscapeLeft: 3
+})
+const autoType = cc.Enum({
+  NO: 0,
+  YES: 1
 })
 cc.Class({
   extends: cc.Component,
@@ -42,19 +46,41 @@ cc.Class({
       min: 0,
       max: 30,
       step: 1,
-      displayName: '发射时间间隔'
+      displayName: '发射时间间隔',
+      visible() {
+        return (this.auto === autoType.YES)
+      }
     },
     front: {
       type: cc.Enum(frontType),
       default: frontType.portraitUp,
       displayName: '子弹发射方向',
       tooltip: 'portrait: 竖直, landscape: 水平'
+    },
+    auto: {
+      type: cc.Enum(autoType),
+      default: autoType.YES,
+      displayName: '自动发射'
+    },
+    fireButton: {
+      type: cc.Button,
+      default: null,
+      displayName: '发射按钮',
+      visible() {
+        return (this.auto === autoType.NO)
+      }
     }
   },
 
 
   start() {
-    this.schedule(this.addBullet, this.interval / 10)
+    if (this.auto === autoType.YES) {
+      this.schedule(this.addBullet, this.interval / 10)
+    } else {
+      this.fireButton.node.on('click', () => {
+        this.addBullet()
+      })
+    }
   },
 
   addBullet() {

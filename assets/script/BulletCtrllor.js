@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-11-16 21:53:31
+ * @Last Modified time: 2018-11-16 21:55:17
  */
 const frontType = cc.Enum({
   portraitUp: 0,
@@ -26,7 +26,7 @@ cc.Class({
     },
     bullet: {
       default: null,
-      type: cc.v2refab,
+      type: cc.Prefab,
       displayName: '子弹预制资源'
     },
     speed: {

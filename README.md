@@ -1,5 +1,5 @@
 # ccc-bullet
-> [预览](https://saber2pr.github.io/MyWeb/build/RandPlat/build/web-mobile)   
+> [预览](https://saber2pr.github.io/MyWeb/build/ccc-bullet/build/web-mobile)   
 
 > cocoscreator&lt; 代码插件化，对编辑器提供接口，无需修改代码
 

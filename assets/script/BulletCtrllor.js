@@ -2,7 +2,7 @@
  * @Author: AK-12 
  * @Date: 2018-10-27 08:53:49 
  * @Last Modified by: AK-12
- * @Last Modified time: 2018-10-31 22:10:35
+ * @Last Modified time: 2018-11-16 21:53:31
  */
 const frontType = cc.Enum({
   portraitUp: 0,
@@ -26,7 +26,7 @@ cc.Class({
     },
     bullet: {
       default: null,
-      type: cc.Prefab,
+      type: cc.v2refab,
       displayName: '子弹预制资源'
     },
     speed: {
@@ -92,16 +92,16 @@ cc.Class({
     let pos
     switch (this.front) {
       case frontType.portraitUp:
-        pos = cc.p(localPoint.x, cc.winSize.height)
+        pos = cc.v2(localPoint.x, cc.winSize.height)
         break
       case frontType.portraitDown:
-        pos = cc.p(localPoint.x, -cc.winSize.height)
+        pos = cc.v2(localPoint.x, -cc.winSize.height)
         break
       case frontType.landscapeRight:
-        pos = cc.p(cc.winSize.width, localPoint.y)
+        pos = cc.v2(cc.winSize.width, localPoint.y)
         break
       case frontType.landscapeLeft:
-        pos = cc.p(-cc.winSize.width, localPoint.y)
+        pos = cc.v2(-cc.winSize.width, localPoint.y)
         break
       default:
         throw (new Error('front error'))

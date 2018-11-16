@@ -25,7 +25,6 @@
     "REMOTE_SERVER_ROOT": "",
     "orientation": "portrait"
   },
-  "renderMode": "0",
   "startScene": "30af9335-5290-4c62-84b7-45a02d99cb94",
   "title": "ccc-bullet",
   "webOrientation": "auto",
@@ -37,5 +36,13 @@
     "subContext": ""
   },
   "xxteaKey": "754772d5-ef23-44",
-  "zipCompressJs": true
+  "zipCompressJs": true,
+  "android-instant": {
+    "REMOTE_SERVER_ROOT": "",
+    "pathPattern": "",
+    "scheme": "https",
+    "host": "",
+    "skipRecord": false,
+    "recordPath": ""
+  }
 }

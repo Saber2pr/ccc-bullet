@@ -1,8 +1,8 @@
 /*
  * @Author: AK-12 
  * @Date: 2018-10-30 22:46:42 
- * @Last Modified by:   AK-12 
- * @Last Modified time: 2018-10-30 22:46:42 
+ * @Last Modified by: AK-12
+ * @Last Modified time: 2018-11-16 21:52:30
  */
 let MathVec = {
   /**
@@ -112,8 +112,8 @@ let MoveCtrllor = {
       let angle = this.getMoveAngle()
       let force = this.getForce()
       let desPos =
-        method === 'character' ? cc.p(node.x + this.heroSpeed * Math.cos(angle) * force, node.y + this.heroSpeed * Math.sin(angle) * force) :
-        method === 'camera' ? cc.p(node.x - this.heroSpeed * Math.cos(angle) * force, node.y - this.heroSpeed * Math.sin(angle) * force) :
+        method === 'character' ? cc.v2(node.x + this.heroSpeed * Math.cos(angle) * force, node.y + this.heroSpeed * Math.sin(angle) * force) :
+        method === 'camera' ? cc.v2(node.x - this.heroSpeed * Math.cos(angle) * force, node.y - this.heroSpeed * Math.sin(angle) * force) :
         console.log("methodError")
       node.position = cc.v2(desPos)
     }
